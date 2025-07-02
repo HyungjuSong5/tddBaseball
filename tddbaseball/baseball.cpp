@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -11,15 +12,37 @@ struct GuessResult {
 
 class Baseball {
  public:
-  explicit Baseball(const string& question)
-      : question(question) {}
+  explicit Baseball(const string& question) : question(question) {}
 
   GuessResult guess(const string& guessNumber) {
-      assertIllegalArgument(guessNumber);
-    if (guessNumber == question) {
-        return {true, 3, 0};
+    assertIllegalArgument(guessNumber);
+    checktheresult(guessNumber);
+    return checktheresult(guessNumber);
+  }
+
+  GuessResult checktheresult(const string& guessNumber) {
+    vector<int> seqNum = {0, 1, 2};
+    GuessResult result = {false, 0, 0};
+
+    for (auto pos = seqNum.begin(); pos != seqNum.end();) {
+      if (question[*pos] == guessNumber[*pos]) {
+        result.strikes++;
+        pos = seqNum.erase(pos);
+      } else
+        pos++;
     }
-    return {false, 0, 0};
+    if (seqNum.empty()) {
+      result.solved = true;
+      return result;
+    }
+    for (auto pos1 = seqNum.begin(); pos1 != seqNum.end(); ++pos1) {
+      for (auto pos2 = seqNum.begin(); pos2 != seqNum.end(); ++pos2) {
+        if (question[*pos2] == guessNumber[*pos1]) {
+          result.balls++;
+        }
+      }
+    }
+    return result;
   }
 
   void assertIllegalArgument(const std::string& guessNumber) {
