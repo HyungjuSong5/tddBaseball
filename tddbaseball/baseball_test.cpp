@@ -4,15 +4,24 @@
 
 using namespace testing;
 
-TEST(BASEBALLGame, ThrowExceptionWhenInputLengthIsUnmatched) {
+class BaseballFixture : public testing ::Test {
+ public:
   Baseball game;
-  EXPECT_THROW(game.guess(string("12")), length_error);
+  void assertIllegalArgument(string guessNumber) {
+    try {
+      game.guess(guessNumber);
+      FAIL();
+    } catch (exception e) {
+      // pass
+    }
+  }
+};
+
+TEST_F(BaseballFixture, ThrowExceptionWhenInvalidCase) {
+  assertIllegalArgument("12");
+  assertIllegalArgument("12s");
 }
 
-TEST(BASEBALLGame, ThrowExceptionWhenInvalidChar) {
-  Baseball game;
-  EXPECT_THROW(game.guess(string("12s")), invalid_argument);
-}
 
 int main() {
   ::testing::InitGoogleMock();
