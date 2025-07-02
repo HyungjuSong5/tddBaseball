@@ -2,8 +2,11 @@
 
 #include "gmock/gmock.h"
 
-TEST(BASEBALL, BBTEST1) { 
-	EXPECT_EQ(1, 1);
+using namespace testing;
+
+TEST(BASEBALLGame, ThrowExceptionWhenInputLengthIsUnmatched) {
+  Baseball game;
+  EXPECT_THROW(game.guess(string("12")), length_error);
 }
 
 int main() {
